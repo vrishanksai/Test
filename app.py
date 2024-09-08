@@ -1,24 +1,44 @@
-from flask import Flask,render_template
-import random
-import json
+from flask import Flask, render_template, request, redirect, url_for, jsonify
+from pymongo import MongoClient
+from dotenv import load_dotenv
+import os 
 
-app  = Flask(__name__)
-PORT = 3011
+app = Flask(__name__)
 
 
-@app.route("/", methods=["GET","POST"])
-def startpy():
+load_dotenv()
 
-    result = {
-        "Greetings" : "Hi i am Vrishank!",
-        "random_number" : random.randint(20, 100),
-        "intro":"Hello! world"
+mongo_uri = os.getenv('MONGO_URI')
+db_name   = os.getenv('DB_NAME')
+
+
+# MongoDB connection
+client = MongoClient(mongo_uri)
+db = client[db_name]
+collection = db['Collection-One']
+
+# Route to display the form
+@app.route('/')
+def index():
+    return render_template('index.html')
+
+# Route to handle form submission
+@app.route('/submit', methods=['POST'])
+def submit():
+    name = request.form.get('name')
+    place = request.form.get('place')
+
+    if not name or not place:
+        return jsonify({"error": "Missing data"}), 400
+
+    # Insert data into MongoDB
+    data = {
+      "name": name, 
+      "place": place
     }
+    collection.insert_one(data)
 
-    # return result
+    return redirect(url_for('index'))
 
-    return render_template("index.html", result = result)
-
-
-if __name__ == "__main__":
-    app.run( debug = True,host="0.0.0.0",port = PORT)
+if __name__ == '__main__':
+    app.run(debug=True)
