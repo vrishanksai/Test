@@ -40,5 +40,19 @@ def submit():
 
     return redirect(url_for('index'))
 
+@app.route('/view', methods=['GET'])
+def view_collection():
+
+    documents = collection.find({})
+
+    result = []
+    for doc in documents:
+        doc['_id'] = str(doc['_id'])
+        result.append(doc)
+
+
+    return render_template('view.html', data=result)
+    
+
 if __name__ == '__main__':
     app.run(debug=True)
