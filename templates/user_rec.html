@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>User Information</title>
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+</head>
+<body>
+    <div class="container mt-5">
+        <h1 class="text-center">User Information</h1>
+
+        {% if 'error' in user_data %}
+            <div class="alert alert-danger" role="alert">
+                {{ user_data.error }}
+            </div>
+        {% else %}
+            <div class="card">
+                <div class="card-body">
+                    <h5 class="card-title">Username : {{ user_data.name }}</h5>
+                    <p class="card-text">
+                        <strong>Place:</strong> {{ user_data.place }} <br>
+                    </p>
+                </div>
+            </div>
+        {% endif %}
+        
+        <a href="/" class="btn btn-primary mt-3">Go Back</a>
+    </div>
+</body>
+</html>
