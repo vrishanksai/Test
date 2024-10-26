@@ -25,8 +25,8 @@ def index():
 # Route to handle form submission
 @app.route('/submit', methods=['POST'])
 def submit():
-    name = request.form.get('name')
-    place = request.form.get('place')
+    name = request.form.get('name').strip()
+    place = request.form.get('place').strip()
 
     if not name or not place:
         return jsonify({"error": "Missing data"}), 400
@@ -56,17 +56,40 @@ def view_collection():
 @app.route('/get_user/<name>', methods=['GET'])
 def get_user(name):
     # Find user by name
+    # print (f'name : {type(name)}')
     user_data = collection.find_one({'name': name})
-
-    if user_data:
-         user_data.pop('_id', None)  # Remove MongoDB's internal _id field for cleaner rendering
-    else:
-         user_data = {"error": "User not found"}
-    
     # Render the user data in the template
     return render_template('user_rec.html', user_data=user_data)
 
 
+@app.route('/update', methods=['GET', 'POST'])
+def update_user():
+    name = request.form.get('name')
+    new_place = request.form.get('new_place')
+
+    result = collection.update_one(
+        {'name': name},
+        {'$set': {'place': new_place}}
+    )
+
+    return render_template('update_rec.html')
+
+@app.route('/delete-user', methods=['POST', 'GET'])
+def delete_user(): 
+    if request.method == 'POST':
+        username = request.form.get('name')
+        
+        # Delete the user from MongoDB
+        result = collection.delete_one({"name": username})
+
+        if result.deleted_count > 0:
+            return f"User '{username}' deleted successfully."
+        else:
+            return f"User '{username}' not found."
+
+    # Render the HTML form on GET request
+    return render_template('delete_user.html')
 
 if __name__ == '__main__':
     app.run(debug=True)
+

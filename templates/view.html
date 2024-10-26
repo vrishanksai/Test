@@ -19,7 +19,7 @@
             <tbody>
                 {% for item in data %}
                 <tr>
-                    <td>{{ item.name }}</td>
+                    <td ><a href="{{ url_for('get_user', name=item.name) }}" style="color: black;">{{ item.name }}</a></td>
                     <td>{{ item.place }}</td>
                 </tr>
                 {% endfor %}
@@ -30,3 +30,10 @@
     </div>
 </body>
 </html>
+
+
+
+
+
+
+

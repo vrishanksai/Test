@@ -9,7 +9,7 @@
 <body>
     <div class="container mt-5">
         <h1 class="text-center">User Information</h1>
-
+        </div>
         {% if 'error' in user_data %}
             <div class="alert alert-danger" role="alert">
                 {{ user_data.error }}
@@ -19,7 +19,7 @@
                 <div class="card-body">
                     <h5 class="card-title">Username : {{ user_data.name }}</h5>
                     <p class="card-text">
-                        <strong>Place:</strong> {{ user_data.place }} <br>
+                        <h5>Place  : {{ user_data.place }} <br></h5>
                     </p>
                 </div>
             </div>
